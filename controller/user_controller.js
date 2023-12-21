@@ -77,6 +77,23 @@ exports.login = (req, res) => {
   });
 };
 
+exports.getOneUser = (req, res) => {
+  const { id } = req.params;
+  const finduser = users.find((tem) => {
+    return tem.id == id;
+  });
+  if (!finduser) {
+    res.status(200).json({
+      status: "fail",
+      message: "User Not Found",
+    });
+  }
+  res.status(200).json({
+    status: "success",
+    data: finduser,
+  });
+};
+
 exports.editUser = (req, res) => {
   const { id } = req.params;
   const edit = req.body;

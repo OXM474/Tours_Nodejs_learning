@@ -13,7 +13,7 @@ exports.getAllTours = (req, res) => {
   });
 };
 
-exports.getOneTours = (req, res) => {
+exports.getOneTour = (req, res) => {
   const { id } = req.params;
   const findtour = tours.find((tem) => {
     return tem.id == id;

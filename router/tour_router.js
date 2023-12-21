@@ -8,7 +8,7 @@ tourRouter
   .post(tourscontroller.addNewTour);
 tourRouter
   .route("/:id")
-  .get(tourscontroller.getOneTours)
+  .get(tourscontroller.getOneTour)
   .post(tourscontroller.editTour)
   .delete(tourscontroller.deleteTour);
 

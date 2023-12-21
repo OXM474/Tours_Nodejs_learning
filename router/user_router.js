@@ -1,15 +1,17 @@
 const express = require("express");
 const userscontroller = require("../controller/user_controller");
-const tourRouter = express.Router();
+const userRouter = express.Router();
 
-tourRouter
+userRouter
   .route("/")
-  .get(userscontroller.getAllusers)
-  .post(userscontroller.addNewTour);
-tourRouter
+  .get(userscontroller.getAllUsers)
+  .post(userscontroller.getOneUser);
+userRouter.route("/login").get(userscontroller.login);
+userRouter.route("/register").post(userscontroller.register);
+userRouter
   .route("/:id")
-  .get(userscontroller.getOneusers)
-  .post(userscontroller.editTour)
-  .delete(userscontroller.deleteTour);
+  .get(userscontroller.getOneUser)
+  .post(userscontroller.editUser)
+  .delete(userscontroller.deleteUser);
 
-module.exports = tourRouter;
+module.exports = userRouter;
