@@ -1,18 +1,29 @@
 const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const dotenv = require("dotenv");
+
 const tourRouter = require("./router/tour_router");
 const userRouter = require("./router/user_router");
-const morgan = require("morgan");
 const middleware = require("./middlewares/logger");
 
+dotenv.config("./.env");
+
 const app = express();
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(middleware.logger);
 
-app.use("/callapi/0.1/tours", tourRouter);
-app.use("/callapi/0.1/auth", userRouter);
-app.use("/callapi/0.1/user", userRouter);
+app.use("/api/0.1/tours", tourRouter);
+app.use("/api/0.1/auth", userRouter);
+app.use("/api/0.1/user", userRouter);
 
-const port = process.env.port || 3000;
+const port = process.env.port;
 app.listen(port, () => console.log(`Listening at Port ${port}...`));
