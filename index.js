@@ -18,7 +18,9 @@ app.use(
 );
 
 app.use(express.json());
-app.use(morgan("dev"));
+if (process.env.node_env === "development") {
+  app.use(morgan("dev"));
+}
 app.use(middleware.logger);
 
 app.use("/api/0.1/tours", tourRouter);
