@@ -16,12 +16,12 @@ exports.getAllUsers = (req, res) => {
 exports.getOneUser = (req, res) => {
   const { id } = req.params;
   const finduser = users.find((tem) => {
-    return tem.id == id;
+    return tem._id == id;
   });
   if (!finduser) {
     res.status(200).json({
       status: "fail",
-      message: "Tour Not Found",
+      message: "User Not Found",
     });
   }
   res.status(200).json({
@@ -32,7 +32,7 @@ exports.getOneUser = (req, res) => {
 
 exports.register = (req, res) => {
   var newUser = {
-    id: users.length,
+    _id: users.length,
     ...req.body,
   };
   users.push(newUser);

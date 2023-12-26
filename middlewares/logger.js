@@ -1,4 +1,4 @@
 exports.logger = (req, res, next) => {
-  console.log("hello from middleward !");
+  console.log("hello from middleward !🙌");
   next();
 };
