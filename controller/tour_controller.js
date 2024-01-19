@@ -1,4 +1,6 @@
 const fs = require("fs");
+const Tour = require("../models/models");
+const ApiFeatures = require("../utils/ApiFeatures");
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
@@ -24,13 +26,43 @@ exports.checkbody = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    requestedTime: req.requestTime,
-    result: tours.length,
-    data: tours,
-  });
+exports.aliasTopTour = async (req, res, next) => {
+  //Create a copy of req.query
+  const modifiedQuery = { ...req.query };
+
+  //Modify the copy
+  modifiedQuery.limit = 5;
+  modifiedQuery.sort = "-ratingsAverage,price";
+  modifiedQuery.fields = "name,price,ratingsAverage,summary,difficulty";
+
+  req.query = await modifiedQuery;
+
+  next();
+};
+
+exports.getAllTours = async (req, res) => {
+  try {
+    const apiFeatures = new ApiFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .fields()
+      .paginate();
+
+    const Tours = await apiFeatures.currentQuery;
+
+    res.status(200).json({
+      status: "success",
+      requestedTime: req.requestTime,
+      result: Tours.length,
+      data: Tours,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: "Something went Wrong !",
+      error: process.env.node_env == "development" ? err : err.message,
+    });
+  }
 };
 
 exports.getOneTour = (req, res) => {
@@ -50,28 +82,21 @@ exports.getOneTour = (req, res) => {
   });
 };
 
-exports.addNewTour = (req, res) => {
-  var newTour = {
-    id: tours.length,
-    ...req.body,
-  };
-  tours.push(newTour);
-  fs.writeFile(
-    `${__dirname}/../dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
-    (err) => {
-      if (err) {
-        res.status(500).json({
-          status: "fail",
-          message: "Something Went Wrong.",
-        });
-      }
-    }
-  );
-  res.status(200).json({
-    status: "success",
-    message: "Add Successfully",
-  });
+exports.addNewTour = async (req, res) => {
+  try {
+    NewTour = await Tour.create(req.body);
+
+    res.status(200).json({
+      status: "success",
+      message: "Add Successfully",
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "Fail",
+      message: "Something went Worng!",
+      error: process.env.node_env == "development" ? err : err.message,
+    });
+  }
 };
 
 exports.editTour = (req, res) => {

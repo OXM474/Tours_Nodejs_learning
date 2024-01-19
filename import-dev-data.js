@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const fs = require("fs");
-const Tour = require("./../../models/models");
+const Tour = require("./models/models");
 
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -13,8 +13,8 @@ const DB = process.env.DATABASE.replace(
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
+    // useCreateIndex: true,
+    // useFindAndModify: false,
     useUnifiedTopology: true,
   })
   .then((con) => {
@@ -24,7 +24,7 @@ mongoose
 
 //READ the file
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, "utf-8")
+  fs.readFileSync(`${__dirname}/dev-data/data/tours.json`, "utf-8")
 );
 
 //INSERT INTO DATABASE
@@ -37,7 +37,7 @@ const importData = async () => {
   }
 };
 
-//DELETE ALL COLLECTIONS FROM DATABASE
+// DELETE ALL COLLECTIONS FROM DATABASE
 const deleteData = async () => {
   try {
     await Tour.deletMany();

@@ -2,12 +2,25 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 
 const tourRouter = require("./router/tour_router");
 const userRouter = require("./router/user_router");
 const middleware = require("./middlewares/logger");
 
 dotenv.config("./.env");
+
+// Connect to Dada Base
+mongoose
+  .connect(
+    process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSWORD)
+  )
+  .then((connection) => {
+    console.log("Mongo is Connected");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 const app = express();
 
